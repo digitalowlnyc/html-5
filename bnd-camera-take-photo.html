@@ -14,10 +14,11 @@
 
     <div id="status">Loading...</div>
     <video id="video"></video>
-    <canvas id="canvas" width="300" height="300"></canvas>
+    <canvas id="canvas"></canvas>
     <script>
         var canvas = document.getElementById('canvas');
         var video = document.getElementById('video');
+        var photoSizeRatio = .5;
 
         function waitForEvent(element, event) {
             return new Promise(function(resolve, reject) {
@@ -34,8 +35,6 @@
             return navigator.mediaDevices.getUserMedia({"video": true}).then(function(stream) {
                 document.getElementById('status').innerHTML = 'Starting camera';
                 video.src = window.URL.createObjectURL(stream);
-
-
             }).catch(
             function() {
                 console.log("error");
@@ -45,7 +44,15 @@
 
         function takePhoto() {
             var context = canvas.getContext('2d');
-            context.drawImage(video, 0, 0, 220, 150);
+            var aspect = video.videoWidth / video.videoHeight;
+
+            var newHeight = video.videoHeight * photoSizeRatio;
+            var newWidth = newHeight * aspect;
+
+            console.log(newWidth, newHeight);
+            context.canvas.width = newWidth;
+            context.canvas.height = newHeight;
+            context.drawImage(video, 0, 0, newWidth, newHeight);
         }
 
         startCamera()
