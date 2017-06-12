@@ -11,19 +11,16 @@
 </div>
 <div id='container'>
     <video id="video"></video>
-    <canvas id="canvas"></canvas>
     <script>
-        var canvas = document.getElementById('canvas');
-        var video = document.getElementById('video');
         function startCamera() {
-            navigator.getUserMedia({"video": true}, function(stream) {
+            return navigator.mediaDevices.getUserMedia({"video": true}).then(function(stream) {
                 console.log(stream);
                 video.src = window.URL.createObjectURL(stream);
                 video.play();
-            },
-            function() {
-                console.log("error");
-            });
+            }).catch(
+                function(error) {
+                    console.log("error", error);
+                });
         }
 
         startCamera();
