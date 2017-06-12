@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Camera Viewer</title>
+</head>
+<body>
+<h1>Camera Viewer</h1>
+<div>
+    Copyright 2017 Blue Nest Digital LLC
+</div>
+<div id='container'>
+    <video id="video"></video>
+    <canvas id="canvas"></canvas>
+    <script>
+        var canvas = document.getElementById('canvas');
+        var video = document.getElementById('video');
+        function startCamera() {
+            navigator.getUserMedia({"video": true}, function(stream) {
+                console.log(stream);
+                video.src = window.URL.createObjectURL(stream);
+                video.play();
+            },
+            function() {
+                console.log("error");
+            });
+        }
+
+        startCamera();
+    </script>
+</div>
+</body>
+</html>
