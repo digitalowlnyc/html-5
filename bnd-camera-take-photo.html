@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Photo Taker</title>
+</head>
+<body>
+<h1>Camera Viewer</h1>
+<div>
+    Copyright 2017 Blue Nest Digital LLC
+</div>
+<div id='container'>
+    <button id="take-photo" disabled="true" type="button" onclick="takePhoto()">Take photo</button>
+
+    <div id="status">Loading...</div>
+    <video id="video"></video>
+    <canvas id="canvas" width="300" height="300"></canvas>
+    <script>
+        var canvas = document.getElementById('canvas');
+        var video = document.getElementById('video');
+
+        function waitForEvent(element, event) {
+            return new Promise(function(resolve, reject) {
+                var listener = function() {
+                    this.removeEventListener(event, listener);
+                    resolve();
+                };
+
+                element.addEventListener(event, listener);
+            });
+        }
+
+        function startCamera() {
+            return navigator.mediaDevices.getUserMedia({"video": true}).then(function(stream) {
+                document.getElementById('status').innerHTML = 'Starting camera';
+                video.src = window.URL.createObjectURL(stream);
+
+
+            }).catch(
+            function() {
+                console.log("error");
+                document.getElementById('status').innerHTML = 'Error';
+            });
+        }
+
+        function takePhoto() {
+            var context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, 220, 150);
+        }
+
+        startCamera()
+                .then(function() {
+                    return waitForEvent(video, 'canplay');
+                })
+                .then(function() {
+                    video.play();
+                })
+                .then(function() {
+            document.getElementById('status').innerHTML = 'Ready!';
+            document.getElementById('take-photo').disabled = false;
+        });
+    </script>
+</div>
+</body>
+</html>
